@@ -17,7 +17,7 @@ global.access_token;
 app.get("/", function (req, res) {
   res.render("index");
 });
-// gets client id and redirect url to veryify spotify account and access data
+// gets client id and redirect url to verify spotify account and access data
 app.get("/authorize", (req, res) => {
   var auth_query_parameters = new URLSearchParams({
     response_type: "code",
@@ -73,19 +73,21 @@ app.get("/dashboard", async (req, res) => {
   const userInfo = await getData("/me");
   const tracks = await getData("/me/tracks?limit=10");
 
+  //takes it to dashboard file in views and displays
   res.render("dashboard", { user: userInfo, tracks: tracks.items });
 });
 
+// brings recommendations based on the genre of a song
 app.get("/recommendations", async (req, res) => {
   const artist_id = req.query.artist;
   const track_id = req.query.track;
 
   const params = new URLSearchParams({
     seed_artist: artist_id,
-    seed_genres: "rock",
+    seed_genres: "genre",
     seed_tracks: track_id,
   });
-
+// takes it to recommendation file in views and displays
   const data = await getData("/recommendations?" + params);
   res.render("recommendation", { tracks: data.tracks });
 });
